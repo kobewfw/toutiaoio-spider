@@ -1,0 +1,78 @@
+{% load staticfiles %}
+{% include 'toutiaoio/includes/_head.html' %}
+
+<div class="clearfix" style="height: 30px;"></div>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-10 col-sm-offset-1">
+            <div id="date-picker"></div>
+        </div>
+        <div class="col-sm-10 col-sm-offset-1">
+            <div class="row">
+                <h3>{{ year }}年{{ month }}月{{ day }}日</h3>
+            </div>
+{#            <div class="row">#}
+{#                <h5>共{{ articlenums }}篇文章</h5>#}
+{#            </div>#}
+            <table class="table table-striped table-hover ">
+                <thead>
+                    <tr>
+                        <th>标题({{ articlenums }}篇)</th>
+                        <th>来源</th>
+                        <th>赞({{ upvotenums }})</th>
+                        <th>评论({{ commentnums }})</th>
+                        <th>文集</th>
+                        <th>用户</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for article in articles %}
+                    <tr>
+                        <td><a href="{{ article.url }}">{{ article.title }}</a></td>
+                        <td>{{ article.source }}</td>
+                        <td>{{ article.upvote }}</td>
+                        <td>{{ article.comment }}</td>
+                        <td><a href="{{ article.subjecturl }}">{{ article.subjectname }}</a></td>
+                        <td><a href="{{ article.userurl }}">{{ article.username }}</a></td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% include 'toutiaoio/includes/_foot_js.html' %}
+
+<script>
+    var showDateYear = {{ year }};
+    var showDateMonth = {{ month }};
+    var showDateDay = {{ day }};
+    var futureDate = new Date();
+{#    alert(showDateYear);#}
+{#    alert(showDateMonth);#}
+{#    alert(showDateDay);#}
+    futureDate.setFullYear(showDateYear);
+    futureDate.setMonth(showDateMonth-1);
+    futureDate.setDate(showDateDay);
+
+    var datePicker = $('#date-picker');
+    datePicker.datepicker({
+        language: "zh-CN",
+        todayHighlight: true
+    });
+
+    datePicker.datepicker('setDate', futureDate);
+
+$(document).ready(function () {
+    datePicker.on('changeDate', function () {
+        var selectedDate = datePicker.datepicker('getDate');
+        var selectedYear = selectedDate.getFullYear();
+        var selectedMonth = selectedDate.getMonth() + 1;
+        var selectedDay = selectedDate.getDate();
+        window.location.href="/" + selectedYear + "/" + selectedMonth + "/" + selectedDay;
+    });
+});
+</script>
+
+{% include 'toutiaoio/includes/_foot.html' %}
